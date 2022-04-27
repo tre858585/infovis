@@ -11,7 +11,8 @@
   var graphData = {
     nodes: [{ name: "\Richard Fox" }, { name: "\Meryl Pastuch" }, { name: "\Rosalia Larroque" },
      { name: "\Kerstin Belveal" }, { name: "\Lindsay Henion" }, { name: "\Jose Ringwald" }, { name: "\Dylan Ballard" }, { name: "\Agusta Sharp" },
-  { name: "\Glen Grant" }, { name: "\Tobi Gatlin" }],
+  { name: "\Glen Grant" }, { name: "\Tobi Gatlin" }, { name: "\Trevor Webb"}, { name: "\Laure Pelkey" },
+{ name: "\Beth Wilensky" }, { name: "\Alpha Chessor" },],
     links: [
       { source: "Richard Fox", target: "Meryl Pastuch" },
       { source: "Meryl Pastuch", target: "Rosalia Larroque" },
@@ -22,7 +23,11 @@
       { source: "Agusta Sharp", target: "Dylan Ballard" },
       { source: "Glen Grant", target: "Agusta Sharp" },
       { source: "Tobi Gatlin", target: "Glen Grant" },
-      { source: "Tobi Gatlin", target: "Richard Fox" }
+      { source: "Tobi Gatlin", target: "Trevor Webb" },
+      { source: "Laure Pelkey", target: "Trevor Webb" },
+      { source: "Beth Wilensky", target: "Laure Pelkey" },
+      { source: "Alpha Chessor", target: "Beth Wilensky" },
+      { source: "Alpha Chessor", target: "Richard Fox" }
 
     ]
   };
@@ -59,7 +64,7 @@
     /*if it fails when you run then comment the attr under this out
     and youll have the basic layout again
     */
-    .attr("src", function(d) {
+    .attr("src", function(g) {
       const imagePath = require("C:\Users\benba\OneDrive\Desktop\Info_Visualization\D3_Screenshots" + g.data[]);
       return imagePath;
   /* <g>
