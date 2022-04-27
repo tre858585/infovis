@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<meta charset="utf-8" />
+<svg width="960" height="600"></svg>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+<script>
+  //initilize svg or grab svg
+  var svg = d3.select("svg");
+  var width = svg.attr("width");
+  var height = svg.attr("height");
+
+  var graphData = {
+    nodes: [{ name: "\Richard Fox" }, { name: "\Meryl Pastuch" }, { name: "\Rosalia Larroque" },
+     { name: "\Kerstin Belveal" }, { name: "\Lindsay Henion" }, { name: "\Jose Ringwald" }, { name: "\Dylan Ballard" }, { name: "\Agusta Sharp" },
+  { name: "\Glen Grant" }, { name: "\Tobi Gatlin" }],
+    links: [
+      { source: "Richard Fox", target: "Meryl Pastuch" },
+      { source: "Meryl Pastuch", target: "Rosalia Larroque" },
+      { source: "Kerstin Belveal", target: "Rosalia Larroque" },
+      { source: "Lindsay Henion", target: "Kerstin Belveal" },
+      { source: "Jose Ringwald", target: "Lindsay Henion" },
+      { source: "Dylan Ballard", target: "Jose Ringwald" },
+      { source: "Agusta Sharp", target: "Dylan Ballard" },
+      { source: "Glen Grant", target: "Agusta Sharp" },
+      { source: "Tobi Gatlin", target: "Glen Grant" },
+      { source: "Tobi Gatlin", target: "Richard Fox" }
+
+    ]
+  };
+
+  var simulation = d3
+    .forceSimulation(graphData.nodes)
+    .force("charge", d3.forceManyBody().strength(-1000))
+    .force("center", d3.forceCenter(width / 2, height / 2))
+    .force("link", d3.forceLink(graphData.links).id(d => d.name))
+    .on("tick", ticked);
+
+  var links = svg
+    .append("g")
+    .selectAll("line")
+    .data(graphData.links)
+    .enter()
+    .append("line")
+    .attr("stroke-width", 4)
+    .style("stroke", "orange");
+
+  var drag = d3
+    .drag()
+    .on("start", dragstarted)
+    .on("drag", dragged)
+    .on("end", dragended);
+
+  var textsAndNodes = svg
+    .append("g")
+    .selectAll("g")
+    .data(graphData.nodes)
+    .enter()
+    .append("g")
+    .call(drag)
+    /*if it fails when you run then comment the attr under this out
+    and youll have the basic layout again
+    */
+    .attr("src", function(d) {
+      const imagePath = require("C:\Users\benba\OneDrive\Desktop\Info_Visualization\D3_Screenshots" + g.data[]);
+      return imagePath;
+  /* <g>
+        <g>
+          <text>
+          <circle>
+        </g>
+        <g></g>...
+      </g>
+  */
+
+   graphData.links.forEach(function(link){
+
+// initialize a new property on the node
+if (!link.source["linkCount"]) link.source["linkCount"] = 0;
+if (!link.target["linkCount"]) link.target["linkCount"] = 0;
+
+// count it up
+link.source["linkCount"]++;
+link.target["linkCount"]++;
+});
+
+  var circles = textsAndNodes
+    .append("circle")
+    .attr("r",function(d){
+     return d.linkCount ? (d.linkCount * 2) : 2; //<-- some function to determine radius
+  } )
+    .attr("fill", "red");
+
+  var texts = textsAndNodes.append("text").text(function(d) {
+    return d.name;
+  });
+
+  function ticked() {
+    //translate(x, y)
+    textsAndNodes.attr("transform", function(d) {
+      return "translate(" + d.x + ", " + d.y + ")";
+    });
+
+    links
+      .attr("x1", function(d) {
+        return d.source.x;
+      })
+      .attr("y1", function(d) {
+        return d.source.y;
+      })
+      .attr("x2", function(d) {
+        return d.target.x;
+      })
+      .attr("y2", function(d) {
+        return d.target.y;
+      });
+    console.log(simulation.alpha());
+  }
+
+  function dragstarted(d) {
+    //your alpha hit 0 it stops! make it run again
+    simulation.alphaTarget(0.3).restart();
+    d.fx = d3.event.x;
+    d.fy = d3.event.y;
+  }
+  function dragged(d) {
+    d.fx = d3.event.x;
+    d.fy = d3.event.y;
+  }
+
+  function dragended(d) {
+    // alpha min is 0, head there
+    simulation.alphaTarget(0);
+    d.fx = null;
+    d.fy = null;
+  }
+</script>
